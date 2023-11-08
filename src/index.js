@@ -33,6 +33,7 @@ Date.prototype.addDays = function (days) {
 }
 
 const domContainer = document.getElementById('chart-container') || document.body
+const lc = lightningChart()
 
 // Add div for MapChart
 const divMap = document.createElement('div')
@@ -55,7 +56,7 @@ yearDiv.appendChild(yearSlider)
 // Yesterday's day in real time
 let yesterday = new Date('January 10, 2022').formatDate()
 
-const mapChart = lightningChart()
+const mapChart = lc
     .Map({
         // theme: Themes.darkGold
         type: MapTypes.World,
@@ -81,7 +82,7 @@ const palette = new PalettedFill({
 })
 
 // Create chart with customized settings
-const chart = lightningChart()
+const chart = lc
     .ChartXY({
         // theme: Themes.darkGold
         container: divOverlay,
