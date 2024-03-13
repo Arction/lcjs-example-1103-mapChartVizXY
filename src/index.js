@@ -58,7 +58,7 @@ let yesterday = new Date('January 10, 2022').formatDate()
 
 const mapChart = lc
     .Map({
-        // theme: Themes.darkGold
+        theme: Themes[new URLSearchParams(window.location.search).get('theme') || 'darkGold'] || undefined,
         type: MapTypes.World,
         container: divMap,
     })
