@@ -141,7 +141,7 @@ const covidVaccinated = chart
     .setEffect(false)
 
 // Fetch the data
-fetch(document.head.baseURI + `examples/assets/1103/data.json`)
+fetch(new URL(document.head.baseURI).origin + new URL(document.head.baseURI).pathname + `examples/assets/1103/data.json`)
     .then((r) => r.json())
     .then((data) => {
         // Add data to the Point Series
