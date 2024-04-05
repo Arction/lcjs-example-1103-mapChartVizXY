@@ -33,7 +33,9 @@ Date.prototype.addDays = function (days) {
 }
 
 const domContainer = document.getElementById('chart-container') || document.body
-const lc = lightningChart()
+const lc = lightningChart({
+            resourcesBaseUrl: new URL(document.head.baseURI).origin + new URL(document.head.baseURI).pathname + 'resources/',
+        })
 
 // Add div for MapChart
 const divMap = document.createElement('div')
