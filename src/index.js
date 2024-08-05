@@ -2,7 +2,7 @@
  * LightningChart JS Example on ChartXY with Custom Color Theme.
  */
 // Import LightningChartJS
-const lcjs = require('@arction/lcjs')
+const lcjs = require('@lightningchart/lcjs')
 
 const {
     lightningChart,
@@ -94,6 +94,7 @@ const chart = lc
     .setBackgroundFillStyle(transparentFill)
     .setSeriesBackgroundFillStyle(transparentFill)
     .setSeriesBackgroundStrokeStyle(emptyLine)
+    .setCursor((cursor) => cursor.setTickMarkerXVisible(false).setTickMarkerYVisible(false))
 chart.engine.setBackgroundFillStyle(transparentFill)
 
 // Hide axes
@@ -124,39 +125,22 @@ const textBox = chart
 
 // Add PointSeries
 const covidVaccinated = chart
-    .addPointSeries({
-        pointShape: PointShape.Circle,
+    .addPointLineAreaSeries({
+        dataPattern: null,
+        sizes: true,
+        lookupValues: true,
+        ids: true,
     })
+    .setStrokeStyle(emptyLine)
     .setMouseInteractions(false)
     .setName('Vaccination coverage')
-    .setIndividualPointSizeEnabled(true)
-    .setIndividualPointValueEnabled(true)
     .setPointFillStyle(palette)
-    .setEffect(false)
-    .setCursorResultTableFormatter((builder, series, x, y, dataPoint) =>
-        builder
-            .addRow('')
-            .addRow(dataPoint.country)
-            .addRow(`Vaccinated once:`)
-            .addRow(`${dataPoint.value.toFixed(2)}% of population`),
-    )
     .setEffect(false)
 
 // Fetch the data
 fetch(new URL(document.head.baseURI).origin + new URL(document.head.baseURI).pathname + `examples/assets/1103/data.json`)
     .then((r) => r.json())
     .then((data) => {
-        // Add data to the Point Series
-        data.countries.forEach((el, i) => {
-            covidVaccinated.add({
-                x: el.pos[1],
-                y: el.pos[0],
-                value: 0,
-                size: 0,
-                country: el.name,
-            })
-        })
-
         // Set legendBox
         const legend = chart.addLegendBox().add(covidVaccinated)
 
@@ -200,7 +184,12 @@ function startBubbling(bubbles, data) {
     dataAtDate.values.forEach((vacc100, i) => {
         total = total + vacc100
         const country = data.countries[i]
-        changeData(country, bubbles, vacc100)
+        changeData(country, bubbles, vacc100, i)
+    })
+
+    chart.setCursorFormatting((_, hit) => {
+        const country = data.countries[hit.id]
+        return [[hit.series], [country], [`Vaccinated once:`], [`${hit.lookupValue.toFixed(2)}% of population`]]
     })
 
     // Set title as current day
@@ -219,13 +208,14 @@ function startBubbling(bubbles, data) {
 }
 
 // Add new data / change data function
-function changeData(country, covidVaccinated, vacc100) {
-    covidVaccinated.add({
+function changeData(country, covidVaccinated, vacc100, i) {
+    covidVaccinated.appendSample({
         x: country.pos[1],
         y: country.pos[0],
-        value: vacc100,
+        lookupValue: vacc100,
         size: Math.max(3, vacc100 / 2),
-        country: country.name,
+        id: i,
+        // country: country.name, // (!)
     })
 }
 
