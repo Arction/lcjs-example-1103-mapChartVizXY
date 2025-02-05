@@ -48,14 +48,13 @@ const chart = lightningChart()
     .ChartXY({
         container: divOverlay,
     })
-    .setMouseInteractions(false)
     .setBackgroundFillStyle(transparentFill)
     .setSeriesBackgroundFillStyle(transparentFill)
 chart.engine.setBackgroundFillStyle(transparentFill)
 chart.getDefaultAxes().forEach((axis) => axis.setTickStrategy(AxisTickStrategies.Empty).setStrokeStyle(emptyLine))
 
-mapChart.onViewChange((view) => {
-    const { latitudeRange, longitudeRange, margin } = view
+mapChart.addEventListener('viewchange', (event) => {
+    const { latitudeRange, longitudeRange, margin } = event
     chart.getDefaultAxisX().setInterval({ start: longitudeRange.start, end: longitudeRange.end })
     chart.getDefaultAxisY().setInterval({ start: latitudeRange.start, end: latitudeRange.end })
     chart.setPadding(margin)
@@ -119,8 +118,8 @@ Direct developer email support can be purchased through a [Support Plan][4] or b
 © LightningChart Ltd 2009-2022. All rights reserved.
 
 
-[Point Shape]: https://lightningchart.com/js-charts/api-documentation/v6.1.0/enums/PointShape.html
-[PalettedFill]: https://lightningchart.com/js-charts/api-documentation/v6.1.0/classes/PalettedFill.html
-[MapTypes]: https://lightningchart.com/js-charts/api-documentation/v6.1.0/variables/MapTypes.html
-[transparentFill]: https://lightningchart.com/js-charts/api-documentation/v6.1.0/variables/transparentFill.html
+[Point Shape]: https://lightningchart.com/js-charts/api-documentation/v7.0.1/enums/PointShape.html
+[PalettedFill]: https://lightningchart.com/js-charts/api-documentation/v7.0.1/classes/PalettedFill.html
+[MapTypes]: https://lightningchart.com/js-charts/api-documentation/v7.0.1/variables/MapTypes.html
+[transparentFill]: https://lightningchart.com/js-charts/api-documentation/v7.0.1/variables/transparentFill.html
 

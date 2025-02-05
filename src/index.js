@@ -89,7 +89,7 @@ const chart = lc
         // theme: Themes.darkGold
         container: divOverlay,
     })
-    .setMouseInteractions(false)
+    .setUserInteractions(undefined)
     .setTitle('Loading example data ...')
     .setBackgroundFillStyle(transparentFill)
     .setSeriesBackgroundFillStyle(transparentFill)
@@ -101,8 +101,8 @@ chart.engine.setBackgroundFillStyle(transparentFill)
 chart.getDefaultAxes().forEach((axis) => axis.setTickStrategy(AxisTickStrategies.Empty).setStrokeStyle(emptyLine))
 
 // Synchronize ChartXY with MapChart view.
-mapChart.onViewChange((view) => {
-    const { latitudeRange, longitudeRange, margin } = view
+mapChart.addEventListener('viewchange', (event) => {
+    const { latitudeRange, longitudeRange, margin } = event
 
     chart.getDefaultAxisX().setInterval({ start: longitudeRange.start, end: longitudeRange.end })
     chart.getDefaultAxisY().setInterval({ start: latitudeRange.start, end: latitudeRange.end })
@@ -132,7 +132,7 @@ const covidVaccinated = chart
         ids: true,
     })
     .setStrokeStyle(emptyLine)
-    .setMouseInteractions(false)
+    .setPointerEvents(false)
     .setName('Vaccination coverage')
     .setPointFillStyle(palette)
     .setEffect(false)
@@ -189,7 +189,12 @@ function startBubbling(bubbles, data) {
 
     chart.setCursorFormatting((_, hit) => {
         const country = data.countries[hit.id]
-        return [[hit.series], [country], [`Vaccinated once:`], [`${hit.lookupValue.toFixed(2)}% of population`]]
+        return [
+            [{ component: hit.series, rowFillStyle: chart.getTheme().cursorResultTableHeaderBackgroundFillStyle }],
+            [country],
+            [`Vaccinated once:`],
+            [`${hit.lookupValue.toFixed(2)}% of population`],
+        ]
     })
 
     // Set title as current day
